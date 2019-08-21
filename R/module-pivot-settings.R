@@ -1,6 +1,6 @@
 #' @importFrom shinyWidgets prettyRadioButtons
 #' @importFrom htmltools tags tagList
-#' @importFrom shiny NS textInput
+#' @importFrom shiny NS textInput checkboxInput verbatimTextOutput
 pivotSettingsUI <- function(id) {
   ns <- NS(id)
   
@@ -15,20 +15,31 @@ pivotSettingsUI <- function(id) {
       fill = TRUE
     ),
     
-    
-    checkboxInput("dropna", "Drop NA Values."),
-    
-    textInput(
-      inputId = ns("names_col"),
-      label = "Names to: ",
-      width = "100%"
+    conditionalPanel(
+      sprintf("input['%s'] != 'wider'", ns("pivot_type")),
+      checkboxInput(ns("dropna"), "Drop NA values?")
     ),
     
-    textInput(
-      inputId = ns("values_col"),
-      label = "Values to: ",
-      width = "100%"
-    )
+    tags$br(),
+    tags$div(
+      style = "width:50%; float:left;",
+      textInput(
+        inputId = ns("names_col"),
+        label = "Enter new column name to store old column data: ",
+        value = "name",
+        width = "50%"
+      )
+    ),
+    tags$div(
+      style = "width:50%;float:right;",
+      textInput(
+        inputId = ns("values_col"),
+        label = "Enter new column name to store old cell values: ",
+        value = "value",
+        width = "50%"
+      )
+    ),
+    tags$br()
     
   )
 }
@@ -42,11 +53,11 @@ pivotSettingsServer <- function(input, output, session) {
     ns <- session$ns
     
     if (input$pivot_type == "longer") {
-      names_call <- "Names to: "
-      values_call <- "Values to: "
+      names_call <- "Enter new column name to store old column data: "
+      values_call <- "Enter new column name to store old cell values: "
     } else {
-      names_call <- "Names from: "
-      values_call <- "Values from: "
+      names_call <- "Enter old column name to get column data from: "
+      values_call <- "Enter old column name to get cell values from: "
     }
     
     updateTextInput(
@@ -64,18 +75,8 @@ pivotSettingsServer <- function(input, output, session) {
     settings$pivot_type <- input$pivot_type
     settings$names_column <- input$names_col
     settings$values_column <- input$values_col
-    
+    settings$drop_na <- input$dropna
   })
-  
-  # chosenPivot <- reactive({
-  #   switch(input$pivot_type, 
-  #          )
-  # })
-  # output$pivot_chosen <- reactive({
-  #   nchar(ninput$pivot_type)
-  # })
-  # 
-  # outputOptions(output, "pivot_chosen", suspendWhenHidden = FALSE)
   
   return(settings)
 }
