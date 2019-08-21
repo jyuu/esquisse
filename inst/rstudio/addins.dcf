@@ -8,3 +8,7 @@ Description: Export 'ggplot2' plots to 'PowerPoint'.
 Binding: ggplot_to_ppt
 Interactive: true
 
+Name: 'tidyr' pivot helper
+Description: Pivot data. 
+Binding: pivoter
+Interactive: true
