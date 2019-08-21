@@ -47,47 +47,49 @@ pivotServer <- function(input, output, session,
     )
   })
   
-  user_pivot_settings <- reactiveValues()
   get_settings <- callModule(pivotSettingsServer, "pivot_settings")
   
-  observe({
-    user_pivot_settings$pivot_type <- get_settings$pivot_type
-    user_pivot_settings$names_column <- get_settings$names_column
-    user_pivot_settings$values_column <- get_settings$values_column
-  })
-
-  output$pivot_settings_text <- renderText({
-    paste("Desired pivot is: ", user_pivot_settings$pivot_type,
-          " with cols ", user_pivot_settings$names_column,
-          " and vals ", user_pivot_settings$values_column)
-  })
-
   tidyrCall <- reactiveValues(code = "")
 
-
-  output$tidyr_code <- renderText({
+  output$viewer <- DT::renderDataTable({
     tidyr_call_result <- tidyr_call(
       data = dataChart$name,
-      targets_fix = input$dragvars$target[[1]],
-      targets_pivot = input$dragvars$target[[2]],
+      targets = input$dragvars$target[[1]],
       settings = get_settings
     )
-    tidyrCall$code <- rlang::expr_deparse(tidyr_call_result)
-    paste0(tidyrCall$code)
+    
+    tidyrCall$code <- rlang::expr_deparse(tidyr_call_result$call)
+    tidyrCall$result <- tidyr_call_result$call_result
+    
+    out <- callModule(
+      module = pivotCodeServer,
+      id = "tidyr_code", 
+      code_expr = tidyrCall$code
+    )
+    
+    if (!rlang::is_string(tidyrCall$result)) {
+      tidyrCall$result
+    } else {
+      shiny::showNotification(
+        "Cannot parse pivot table with specified settings.", 
+        type = "error"
+      )
+    }
+    
   })
   
-  # cleaned_tidyr_code <- reactiveValues({code = NULL})
-  # cleaned_tidyr_code <- callModule(
+  
+  
+  # callModule(
   #   module = pivotCodeServer,
-  #   tidyr_code = tidyrCall 
+  #   id = "tidyr_code",
+  #   # data = dataChart$name,
+  #   targets = reactive(tidyrCall$code)
+  #   # settings = get_settings
+  #   # targets = reactive(input$dragsvars$target[[1]]),
+  #   # settings = reactive(get_settings)
   # )
   
-  output$viewer <- DT::renderDataTable({
-    # dataChart$data
-    safe_tidyr_call(expr = tidyrCall$code,
-                    data = dataChart$data)
-  })
-
   observeEvent(input$close, shiny::stopApp())
   
   output_module <- reactiveValues(code_plot = NULL, code_filters = NULL, data = NULL)

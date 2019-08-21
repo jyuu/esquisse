@@ -56,16 +56,15 @@ pivotUI <- function(id,
           dragulaInput(
             inputId = ns("dragvars"),
             sourceLabel = "Variables",
-            targetsLabels = c("Fixed Variables", "Pivot Variables"),
-            targetsIds = c("fvar", "pvar"),
+            targetsLabels = c("Pivot Columns"),
+            targetsIds = c("fvar"),
             choices = "",
             badge = FALSE,
             width = "100%",
-            height = "50%",
+            height = "40%",
             replace = FALSE
           ),
-          pivotSettingsUI(ns("pivot_settings")),
-          textOutput(ns("pivot_settings_text"))
+          pivotSettingsUI(ns("pivot_settings"))
         )
       ),
       
@@ -79,7 +78,10 @@ pivotUI <- function(id,
       # export code
       miniTabPanel("Export", icon = icon("laptop-code"),
         miniContentPanel(
-          pivotCodeUI(ns("tidyr_code"), insert_code = TRUE)
+          pivotCodeUI(
+            ns("tidyr_code"),
+            insert_code = TRUE
+          )
         )
       )
       
