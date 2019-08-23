@@ -6,40 +6,33 @@ pivotSettingsUI <- function(id) {
   
   tagList(
     
-    prettyRadioButtons(
-      inputId = ns("pivot_type"),
-      label = "Choose a type of pivot desired: ",
-      choices = c("longer", "wider"),
-      inline = TRUE,
-      status = "info",
-      fill = TRUE
-    ),
+    # # FIXME: Need better helpers to drag-and-drop pivot columns 
+    # textInputRow(inputId = ns("startsWith"), 
+    #              label = "Column name starts with: ",
+    #              value = ""), 
+    # textInputRow(inputId = ns("endsWith"),
+    #              label = "Column name ends with: ",
+    #              value = ""),
+    # 
+    # tags$br(),
+    # tags$br(),
     
-    conditionalPanel(
-      sprintf("input['%s'] != 'wider'", ns("pivot_type")),
-      checkboxInput(ns("dropna"), "Drop NA values?")
-    ),
+    # prettyRadioButtons(
+    #   inputId = ns("pivot_type"),
+    #   label = "Choose a type of pivot desired: ",
+    #   choices = c("longer", "wider"),
+    #   inline = TRUE,
+    #   status = "info",
+    #   fill = TRUE
+    # ),
     
-    tags$br(),
-    tags$div(
-      style = "width:50%; float:left;",
-      textInput(
-        inputId = ns("names_col"),
-        label = "Enter new column name to store old column data: ",
-        value = "name",
-        width = "50%"
-      )
-    ),
-    tags$div(
-      style = "width:50%;float:right;",
-      textInput(
-        inputId = ns("values_col"),
-        label = "Enter new column name to store old cell values: ",
-        value = "value",
-        width = "50%"
-      )
-    ),
-    tags$br()
+    # conditionalPanel(
+    #   sprintf("input['%s'] != 'wider'", ns("pivot_type")),
+    #   checkboxInput(ns("dropna"), "Drop NA values?")
+    # ),
+    
+    # tags$br(),
+   
     
   )
 }
