@@ -29,6 +29,6 @@ pivoter <- function(data = NULL, coerceVars = FALSE) {
         data = rv
       )
     },
-    viewer = dialogViewer("Tidy gadget", width = 700, height = 800)
+    viewer = dialogViewer("Tidy gadget", width = 1000, height = 1000)
   )
 }
