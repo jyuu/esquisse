@@ -47,7 +47,15 @@ pivotServer <- function(input, output, session,
     )
   })
   
-  get_settings <- callModule(pivotSettingsServer, "pivot_settings")
+  # get_settings <- callModule(pivotSettingsServer, "pivot_settings")
+  get_settings <- reactiveValues()
+  
+  observe({
+    get_settings$pivot_type <- input$pivot_type
+    get_settings$names_column <- input$names_col
+    get_settings$values_column <- input$values_col
+    get_settings$drop_na <- input$dropna
+  })
   
   tidyrCall <- reactiveValues(code = "")
 
