@@ -53,18 +53,47 @@ pivotUI <- function(id,
       # pivot settings
       miniTabPanel("Pivot Settings", icon = icon("arrows"),
         miniContentPanel(
-          dragulaInput(
-            inputId = ns("dragvars"),
-            sourceLabel = "Variables",
-            targetsLabels = c("Pivot Columns"),
-            targetsIds = c("fvar"),
-            choices = "",
-            badge = FALSE,
-            width = "100%",
-            height = "40%",
-            replace = FALSE
+          
+          prettyRadioButtons(
+            inputId = ns("pivot_type"),
+            label = "Choose a type of pivot desired: ",
+            choices = c("longer", "wider"),
+            inline = TRUE,
+            status = "info",
+            fill = TRUE
           ),
-          pivotSettingsUI(ns("pivot_settings"))
+          
+          conditionalPanel(
+            condition = paste0("input['", ns("pivot_type"), "']=='longer'"),
+            dragulaInput(
+              inputId = ns("dragvars"),
+              sourceLabel = "Variables",
+              targetsLabels = c("Pivot Columns"),
+              targetsIds = c("fvar"),
+              choices = "",
+              badge = FALSE,
+              width = "100%",
+              height = "200px",
+              replace = FALSE
+            )
+          ), 
+          
+          conditionalPanel(
+            sprintf("input['%s'] != 'wider'", ns("pivot_type")),
+            textInputRow(
+              inputId = ns("names_col"),
+              label = "Enter new column name to store old column data: ",
+              value = "name"
+            ),
+            textInputRow(
+              inputId = ns("values_col"),
+              label = "Enter new column name to store old cell values: ",
+              value = "value"
+            ),
+            checkboxInput(ns("dropna"), "Drop NA values?")
+          ),
+          
+          tags$br()
         )
       ),
       
