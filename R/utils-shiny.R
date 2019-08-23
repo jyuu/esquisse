@@ -67,3 +67,23 @@ rCodeContainer <- function(...) {
   htmltools::tags$div(htmltools::tags$pre(code))
 }
 
+#' Tag to put text input helpers side by side
+#' 
+#' @param inputId Module id. 
+#' @param label Module label.
+#' @param value Value to include as default in cell. 
+#' 
+#' @noRd
+textInputRow <- function(inputId, label, value = "") {
+  htmltools::tags$div(
+    style="display:inline",
+    tags$label(label, `for` = inputId), 
+    tags$input(
+      id = inputId, 
+      type = "text", 
+      value = value,
+      class="input-medium"
+      # style="margin-left:auto;margin-right:auto;"
+    )
+  )
+}
